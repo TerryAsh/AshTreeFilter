@@ -2,7 +2,7 @@ use_frameworks!
 
 target 'AshFilterView_Example' do
   pod 'AshFilterView', :path => '../'
-
+  pod 'MJExtension'
   target 'AshFilterView_Tests' do
     inherit! :search_paths
 
