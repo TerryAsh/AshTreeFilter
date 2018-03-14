@@ -1,0 +1,33 @@
+{
+  "name": "AshFilterView",
+  "version": "0.1.0",
+  "summary": "A short description of AshFilterView.",
+  "description": "TODO: Add long description of the pod here.",
+  "homepage": "https://github.com/terry ash/AshFilterView",
+  "license": {
+    "type": "MIT",
+    "file": "LICENSE"
+  },
+  "authors": {
+    "terry ash": "terry_ash@sina.com"
+  },
+  "source": {
+    "git": "https://github.com/terry ash/AshFilterView.git",
+    "tag": "0.1.0"
+  },
+  "platforms": {
+    "ios": "8.0"
+  },
+  "source_files": "AshFilterView/Classes/**/*",
+  "dependencies": {
+    "MJExtension": [
+      "~> 3.0.13"
+    ],
+    "Masonry": [
+
+    ],
+    "FrameAccessor": [
+
+    ]
+  }
+}

@@ -1,0 +1,6 @@
+framework module AshFilterView {
+  umbrella header "AshFilterView-umbrella.h"
+
+  export *
+  module * { export * }
+}

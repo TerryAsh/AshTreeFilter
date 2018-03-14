@@ -1,0 +1,26 @@
+PODS:
+  - AshFilterView (0.1.0):
+    - FrameAccessor
+    - Masonry
+    - MJExtension (~> 3.0.13)
+  - FrameAccessor (2.0)
+  - Masonry (1.1.0)
+  - MJExtension (3.0.13)
+
+DEPENDENCIES:
+  - AshFilterView (from `../`)
+  - MJExtension
+
+EXTERNAL SOURCES:
+  AshFilterView:
+    :path: ../
+
+SPEC CHECKSUMS:
+  AshFilterView: 017b04f9c7f9c357a5b59f355fd0328fe90f7e5c
+  FrameAccessor: 443a13e58e23a10ff22180da0897b28c3f6abf66
+  Masonry: 678fab65091a9290e40e2832a55e7ab731aad201
+  MJExtension: 5932755f451458eefa24239358817f8d291240c7
+
+PODFILE CHECKSUM: 1585104b48ed90fed1181e4af92d749fe458de37
+
+COCOAPODS: 1.3.1
