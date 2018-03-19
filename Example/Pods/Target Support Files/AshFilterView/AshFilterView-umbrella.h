@@ -10,6 +10,7 @@
 #endif
 #endif
 
+#import "AshHierachyView.h"
 #import "AshHierachyViewModel.h"
 #import "AshHierarchyTreeContailer.h"
 

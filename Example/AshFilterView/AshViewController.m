@@ -7,10 +7,14 @@
 //
 
 #import "AshViewController.h"
-#import <AshFilterView/AshHierarchyTreeContailer.h>
+#import <AshFilterView/AshHierachyView.h>
 #import <FrameAccessor/FrameAccessor.h>
 #import <MJExtension/MJExtension.h>
-@interface AshViewController ()
+
+
+@interface AshViewController ()<AshHierachyViewDelegate>
+
+@property(nonatomic ,strong) AshHierachyView *hierachyView;
 
 @end
 
@@ -21,7 +25,7 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
     self.view.backgroundColor = [UIColor lightTextColor];
-    [self _createTripleTree];
+    //[self _createTripleTree];
     [self _createDoubeTree];
 }
 
@@ -29,6 +33,15 @@
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (AshHierachyView *)hierachyView{
+    if (nil == _hierachyView) {
+        _hierachyView = [AshHierachyView defaultHierachyView];
+        _hierachyView.delegate = self;
+        [self.view addSubview:_hierachyView];
+    }
+    return _hierachyView;
 }
 
 - (void)_createDoubeTree{
@@ -54,12 +67,12 @@
                            }];
     NSArray<AshHierachyViewModel *> *vms = [AshHierachyViewModel mj_objectArrayWithKeyValuesArray:datas];
     
-    AshHierarchyTreeContailer *container = [[AshHierarchyTreeContailer alloc] initWithFrame:self.view.frame];
-    container.height *= .4;
-    container.depth = 2;
-    container.top =self.view.height *.5;
-    container.treeData = vms;
-    [self.view addSubview:container];
+    self.hierachyView.treeContainer.depth = 1;
+    self.hierachyView.treeContainer.treeData = vms;
+}
+
+- (void)motionBegan:(UIEventSubtype)motion withEvent:(UIEvent *)event{
+    [self _createTripleTree];
 }
 
 - (void)_createTripleTree{
@@ -97,11 +110,20 @@
                            }];
     NSArray<AshHierachyViewModel *> *vms = [AshHierachyViewModel mj_objectArrayWithKeyValuesArray:datas];
     
-    AshHierarchyTreeContailer *container = [[AshHierarchyTreeContailer alloc] initWithFrame:self.view.frame];
-    container.height *= .4;
-    container.depth = 3;
-    container.treeData = vms;
-    [self.view addSubview:container];
+    self.hierachyView.treeContainer.depth = 2;
+    self.hierachyView.treeContainer.treeData = vms;
 }
 
+#pragma mark--
+- (void)onHierachyViewDidPressedEnsure:(AshHierachyView *)hierachyView{
+    NSLog(@"%@,%@,%s",hierachyView.treeContainer.selectedAreas,
+                      hierachyView.treeContainer.selectedDistrict,
+                      __func__);
+}
+
+- (void)onHierachyViewDidPressedReset:(AshHierachyView *)hierachyView{
+    NSLog(@"%@,%@,%s",hierachyView.treeContainer.selectedAreas,
+          hierachyView.treeContainer.selectedDistrict,
+          __func__);
+}
 @end

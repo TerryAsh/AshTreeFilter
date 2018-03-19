@@ -21,14 +21,18 @@
 /**
  整个树状图的层次
  max is 3
- min is 2
- defalut is 2
+ min is 1
+ defalut is 1
  */
 @property(assign ,nonatomic) NSInteger depth;
 
 @property(nonatomic ,copy) NSArray<AshHierachyViewModel *> *treeData;
-@property(nonatomic ,readonly) NSArray<NSArray<NSNumber *> *> *selectedRowNumbers;
+@property(nonatomic ,readonly) NSArray<AshHierachyViewModel *> *selectedAreas;
+@property(nonatomic ,readonly) AshHierachyViewModel *selectedDistrict;
 
 - (instancetype)initWithFrame:(CGRect)frame;
+
+- (void)reset;
+
 
 @end

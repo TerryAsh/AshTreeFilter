@@ -19,15 +19,16 @@
 
 @implementation AshHierarchyTreeContailer
 @synthesize treeData = _treeData;
-@synthesize selectedRowNumbers = _selectedRowNumbers;
 @synthesize depth = _depth;
+@synthesize selectedDistrict = _selectedDistrict;
+@synthesize selectedAreas = _selectedAreas;
 
 - (instancetype)initWithFrame:(CGRect)frame{
     if (self = [super initWithFrame:frame]) {
         self->_tables = [NSMutableArray new];
         self->_treeData = [NSMutableArray new];
         self->_selectedRowNumbers = [NSMutableArray new];
-        self->_depth = 2;
+        self->_depth = 1;
     }
     return self;
 }
@@ -39,6 +40,27 @@
         [self->_treeData addObjectsFromArray:treeData];
     }
     [self _reload];
+}
+
+- (AshHierachyViewModel *)selectedDistrict{
+    if (self.depth == 1) {
+        return  nil;
+    }
+    __block NSArray<AshHierachyViewModel *> *nodes =  [self _nodesAt:0];
+    NSNumber *districtNumber = [self->_selectedRowNumbers[0] firstObject];
+    self->_selectedDistrict = nodes[districtNumber.integerValue];
+    return self->_selectedDistrict;
+}
+
+- (NSArray<AshHierachyViewModel *> *)selectedAreas{
+    __block  NSMutableArray<AshHierachyViewModel *> *selectedNodes = [NSMutableArray new];
+    NSInteger areaIndex = self.depth > 1 ? 1:0;
+    __block NSArray<AshHierachyViewModel *> *nodes =  [self _nodesAt:areaIndex];
+    [self->_selectedRowNumbers[areaIndex] enumerateObjectsUsingBlock:^(NSNumber * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        AshHierachyViewModel *node = nodes[obj.integerValue];
+        [selectedNodes addObject:node];
+    }];
+    return selectedNodes;
 }
 
 /*
@@ -66,10 +88,15 @@
     if (nil == cell) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
                                       reuseIdentifier:CellID];
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
     }
     NSInteger currentLevel = [self->_tables indexOfObject:tableView];
     NSArray<AshHierachyViewModel *> *nodes = [self _nodesAt:currentLevel];
     cell.textLabel.text = nodes[indexPath.row].name;
+    
+    NSArray<NSNumber *> *numbersSelected = self->_selectedRowNumbers[currentLevel];
+    bool isSeleted = [numbersSelected containsObject:@(indexPath.row)];
+    cell.textLabel.textColor = isSeleted ? [UIColor redColor] :[UIColor blackColor] ;
     return cell;
 }
 
@@ -84,13 +111,18 @@
     
     BOOL isSelectedLastTable = (currentLevel == self.depth -1);
     if (isSelectedLastTable) {
-        if (![self.selectedRowNumbers[currentLevel] containsObject:@(indexPath.row)]) {
+        if (![self->_selectedRowNumbers[currentLevel] containsObject:@(indexPath.row)]) {
             [self->_selectedRowNumbers[currentLevel]  addObject:@(indexPath.row)];
+        } else {
+            [self->_selectedRowNumbers[currentLevel] removeObject:@(indexPath.row)];
         }
         [self->_tables[currentLevel] reloadData];
     } else {
-        [self->_selectedRowNumbers[currentLevel]  removeAllObjects];
+        for (NSInteger i = currentLevel ; i != self.depth; i++) {
+            [self->_selectedRowNumbers[i] removeAllObjects];
+        }
         [self->_selectedRowNumbers[currentLevel]  addObject:@(indexPath.row)];
+        [self->_tables[currentLevel] reloadData];
         [self->_tables[currentLevel + 1] reloadData];
         
         if (self->_tables.count > 2) {
@@ -105,6 +137,11 @@
     [self _adjusteTables];
 }
 
+#pragma mark --public
+- (void)reset{
+    [self _reload];
+}
+
 #pragma mark --private
 
 - (NSArray<AshHierachyViewModel *> *)_nodesAt:(NSInteger)level{
@@ -116,7 +153,7 @@
     }
     NSArray<AshHierachyViewModel *> *nodes = self.treeData;
     for (int i = 0 ; i != level; i++) {
-       NSArray<NSNumber *> *selectedRowsAtLevel = self.selectedRowNumbers[i];
+       NSArray<NSNumber *> *selectedRowsAtLevel = self->_selectedRowNumbers[i];
         if (selectedRowsAtLevel.count) {
            NSInteger selectedIndex = selectedRowsAtLevel[0].integerValue;
            nodes = nodes[selectedIndex].leafs;

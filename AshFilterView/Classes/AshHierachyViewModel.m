@@ -15,6 +15,10 @@
     return (self.leafs.count == 0);
 }
 
+- (NSString *)description{
+    return [NSString stringWithFormat:@"%@+%@",self.id,self.name];
+}
+
 + (NSDictionary *)objectClassInArray{
     return @{
              @"leafs" : @"AshHierachyViewModel"
